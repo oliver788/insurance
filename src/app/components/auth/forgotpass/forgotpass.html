@@ -1,0 +1,32 @@
+
+<div class="d-flex justify-content-center">
+  <div class="text-center mt-5 pt-5">
+    <h1>Welcome to our App.</h1>
+    <p>Please enter your Email to reset the password</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="d-block">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" required>
+        <mat-error *ngIf="form.get('email')?.invalid">Please enter a valid email</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button 
+              class="d-block mb-1 auth-button" 
+              type="submit"
+              [disabled]="isSubmissionInProgress">
+        Reset Password
+      </button>
+      
+      <mat-error *ngIf="errorMessage" class="d-block">{{errorMessage}}</mat-error>
+    </form>
+
+    <p>Sign-in instead?</p>
+    <button mat-raised-button 
+            class="d-block auth-button" 
+            color="primary" 
+            [routerLink]="['/auth/login']">
+      Sign-In
+    </button>
+  </div>
+</div>

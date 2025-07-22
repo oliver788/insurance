@@ -1,0 +1,66 @@
+<body style="background: linear-gradient(135deg, #009fe3, #003865);
+      background-size: cover;
+      background-attachment: fixed;   padding-top: 1px;">
+<div class="login-container" style="max-width: 400px; margin: auto;  margin-top: 40px; padding: 2rem; border-radius: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); background-color: #fff; border: 2px solid #003865;">
+
+  <h2 style="text-align: center; margin-bottom: 1rem; color: #003865;">Regisztráció</h2>
+
+  <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+
+    <mat-form-field appearance="outline" class="full-width" style="width: 100%;">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" required formControlName="email" autocomplete="email">
+      <mat-icon matSuffix style="color: #009fe3;">email</mat-icon>
+      <mat-error *ngIf="authForm.get('email')?.hasError('required')">Kötelező mező</mat-error>
+      <mat-error *ngIf="authForm.get('email')?.hasError('email')">Érvénytelen email</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width" style="width: 100%;">
+      <mat-label>Jelszó</mat-label>
+      <input matInput [type]="hidePassword ? 'password' : 'text'" required formControlName="password" autocomplete="new-password">
+      <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Jelszó megjelenítése/elrejtése'" type="button">
+        <mat-icon style="color: #009fe3;">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="authForm.get('password')?.hasError('required')">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width" style="width: 100%;">
+      <mat-label>Jelszó megerősítése</mat-label>
+      <input matInput [type]="hidePassword ? 'password' : 'text'" required formControlName="confirmPassword" autocomplete="new-password">
+      <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Jelszó megjelenítése/elrejtése'" type="button">
+        <mat-icon style="color: #009fe3;">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="authForm.get('confirmPassword')?.hasError('required')">Kötelező mező</mat-error>
+      <mat-error *ngIf="authForm.hasError('passwordMismatch') && authForm.get('confirmPassword')?.touched">
+        A jelszavak nem egyeznek
+      </mat-error>
+    </mat-form-field>
+
+    <div class="button-wrapper" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+      <button mat-raised-button style="background-color: #003865; color: #fff;" type="submit" [disabled]="authForm.invalid || isSubmitionInProgress">
+        Regisztráció
+      </button>
+
+      <button mat-raised-button style="background-color: #009fe3; color: #fff;" type="button" (click)="onSignInWithGoogle()">
+        <mat-icon>account_circle</mat-icon>&nbsp; Google regisztráció
+      </button>
+
+      <button mat-button style="color: #003865;" type="button" [routerLink]="['/auth/login']">
+        Van már fiókod?
+      </button>
+    </div>
+
+  </form>
+
+  <div class="alert alert-danger" *ngIf="errorMessage" style="margin-top: 1rem; padding: 1rem; border: 1px solid #f44336; border-radius: 0.5rem; color: #f44336; background-color: #ffebee;">
+    <mat-icon>error_outline</mat-icon>
+    {{ errorMessage }}
+  </div>
+
+  <div style="display: flex; justify-content: center; margin-top: 1rem;" *ngIf="isSubmitionInProgress">
+    <mat-spinner diameter="40" color="primary"></mat-spinner>
+  </div>
+
+</div>
+
+</body>

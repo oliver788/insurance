@@ -1,0 +1,112 @@
+
+<app-navbar></app-navbar>
+
+<div class="container">
+  <header>
+    <h1>Üdvözöljük a kérdőív oldalon!</h1>
+    <button mat-raised-button color="warn" (click)="onSignout()">
+      Kijelentkezés
+    </button>
+  </header>
+
+  <div *ngIf="isAdmin" class="admin-message">
+    <h2>Üdv, Admin!</h2>
+    <p>Itt fogod látni a felhasználói válaszokat és egyéb admin funkciókat.</p>
+  </div>
+<div *ngIf="isAdmin" class="admin-table-section">
+  <h2>Felhasználói válaszok</h2>
+
+  <div *ngIf="isLoadingAdminResponses">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Felhasználói válaszok betöltése...</p>
+  </div>
+
+  <table *ngIf="!isLoadingAdminResponses && allResponses.length > 0" class="admin-table">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Angular-t szereti?</th>
+        <th>TypeScript?</th>
+        <th>Beküldés ideje</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let response of allResponses">
+        <td>{{ response.userEmail }}</td>
+        <td>{{ response.question1 }}</td>
+        <td>{{ response.question2 }}</td>
+        <td>{{ response.timestamp?.toDate?.() | date: 'medium' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!isLoadingAdminResponses && allResponses.length === 0">Nincs elérhető válasz.</p>
+</div>
+
+
+
+  <section class="survey-section">
+    <h2>Kérdőív</h2>
+    
+    <div *ngIf="isLoading" class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Adatok betöltése...</p>
+    </div>
+
+    <div *ngIf="loadError" class="error-state">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <p>Hiba történt az adatok betöltésekor</p>
+      <button mat-raised-button color="primary" (click)="retryLoad()">
+        Újrapróbálkozás
+      </button>
+    </div>
+
+    <form *ngIf="!isLoading && !loadError" [formGroup]="surveyForm" (ngSubmit)="submitForm()">
+      <div class="question">
+        <h3>1. Szereted az Angular-t?</h3>
+        <mat-radio-group formControlName="question1" class="radio-group">
+          <mat-radio-button value="igen" class="radio-button">Igen</mat-radio-button>
+          <mat-radio-button value="nem" class="radio-button">Nem</mat-radio-button>
+        </mat-radio-group>
+        <mat-error *ngIf="surveyForm.get('question1')?.hasError('required')">Kötelező választ adni</mat-error>
+      </div>
+
+      <div class="question">
+        <h3>2. Szeretsz TypeScriptben fejleszteni?</h3>
+        <mat-radio-group formControlName="question2" class="radio-group">
+          <mat-radio-button value="igen" class="radio-button">Igen</mat-radio-button>
+          <mat-radio-button value="nem" class="radio-button">Nem</mat-radio-button>
+        </mat-radio-group>
+        <mat-error *ngIf="surveyForm.get('question2')?.hasError('required')">Kötelező választ adni</mat-error>
+      </div>
+
+      <div class="form-actions">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit" 
+          [disabled]="surveyForm.invalid || isSubmitting"
+        >
+          {{ hasExistingResponse ? 'Frissítés' : 'Küldés' }}
+          <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
+        </button>
+        
+        <button 
+          *ngIf="isSubmitted"
+          mat-raised-button 
+          color="accent" 
+          type="button"
+          (click)="enableEditing()"
+          [disabled]="isSubmitting"
+        >
+          Módosítás
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="submissionMessage" class="message">
+      <mat-icon>check_circle</mat-icon>
+      {{ submissionMessage }}
+    </div>
+  </section>
+</div>
