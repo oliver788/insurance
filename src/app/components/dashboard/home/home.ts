@@ -6,7 +6,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ChangeDetectorRef } from '@angular/core';
-import emailjs from 'emailjs-com'; // 🔹 Importáld
+import emailjs from 'emailjs-com';
+import { getStorage, ref, getDownloadURL } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-home',
@@ -38,6 +39,7 @@ export class Home implements OnInit {
 
   allResponses: any[] = [];
   isLoadingAdminResponses: boolean = false;
+  userImages: { [key: string]: string } = {};
 
   constructor() {
     this.isAdmin = this.user?.email === this.ADMIN_EMAIL;
@@ -46,7 +48,9 @@ export class Home implements OnInit {
 
   ngOnInit(): void {
     this.loadUserResponse();
-    if (this.isAdmin) this.loadAllResponses();
+    if (this.isAdmin) {
+      this.loadAllResponses();
+    }
   }
 
   private initializeForm(): void {
@@ -89,6 +93,21 @@ export class Home implements OnInit {
       const answersRef = collection(this.firestore, 'answers');
       const querySnapshot = await getDocs(answersRef);
       this.allResponses = querySnapshot.docs.map(doc => doc.data());
+      
+      // Load images for each user
+      for (const response of this.allResponses) {
+        if (response.userId) {
+          try {
+            const storage = getStorage();
+            const imageRef = ref(storage, `casco_uploads/${response.userId}.jpg`);
+            const url = await getDownloadURL(imageRef);
+            this.userImages[response.userId] = url;
+          } catch (error) {
+            console.log(`No image found for user ${response.userId}`);
+            this.userImages[response.userId] = '';
+          }
+        }
+      }
     } catch (error) {
       console.error('Error loading all responses:', error);
       this.showSnackbar('Hiba történt az admin adatok betöltésekor');
@@ -169,7 +188,6 @@ export class Home implements OnInit {
     this.loadUserResponse();
   }
 
-  // 🔹 Email küldés emailJS segítségével
   private async sendEmail(type: 'new' | 'update') {
     const templateParams = {
       to_email: this.user.email,
@@ -181,10 +199,10 @@ export class Home implements OnInit {
 
     try {
       await emailjs.send(
-        'service_3l4skcp',      // 🔁 Csere: EmailJS service ID
-        'template_u6i768g',     // 🔁 Csere: EmailJS template ID
+        'service_3l4skcp',
+        'template_u6i768g',
         templateParams,
-        '1HoL76uozXpANfljR'       // 🔁 Csere: EmailJS public key (vagy userID)
+        '1HoL76uozXpANfljR'
       );
       console.log('Email sent successfully!');
     } catch (error) {
