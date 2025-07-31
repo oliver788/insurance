@@ -1,2 +1,154 @@
-
+<!-- lakasbiztositas.component.html -->
 <app-navbar></app-navbar>
+
+<div class="loading-spinner" *ngIf="isLoading">
+  <mat-spinner id="spinner"></mat-spinner>
+  <p>Adatok betöltése...</p>
+</div>
+
+<div *ngIf="loadError" class="error-message">
+  <p>Hiba történt az adatok betöltésekor.</p>
+  <button mat-raised-button color="primary" (click)="retryLoad()">Újrapróbálkozás</button>
+</div>
+
+<form *ngIf="!isLoading && !loadError" [formGroup]="surveyForm" (ngSubmit)="submitForm()" class="insurance-form">
+  <h2> Lakásbiztosítási ajánlathoz szükséges adatok </h2>
+  <p class="note"><strong>Megjegyzés:</strong> Ha rendelkezik előző kötvénnyel, kérjük, annak adatait az űrlap alján töltse ki!</p>
+
+  <div class="grid">
+    <!-- Személyes adatok -->
+    <mat-form-field appearance="fill">
+      <mat-label>Szerződő neve*</mat-label>
+      <input matInput formControlName="szerzodoNev" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('szerzodoNev')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+      <mat-form-field appearance="fill">
+      <mat-label>Telefon*</mat-label>
+      <input matInput  type="number" formControlName="telefon" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('telefon')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill">
+      <mat-label>Születési dátum*</mat-label>
+      <input matInput type="date" formControlName="szuletesiDatum" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('szuletesiDatum')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Édesanya leánykori neve*</mat-label>
+      <input matInput formControlName="anyjaNeve" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('anyjaNeve')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Ingatlan címe*</mat-label>
+      <input matInput formControlName="ingatlanCim" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('ingatlanCim')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Épület típusa*</mat-label>
+      <mat-select formControlName="epuletTipus" [disabled]="isSubmitted">
+        <mat-option value="lakas">Lakás</mat-option>
+        <mat-option value="csaladiHaz">Családi ház</mat-option>
+      </mat-select>
+      <mat-error *ngIf="surveyForm.get('epuletTipus')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Épület szerkezete</mat-label>
+      <input matInput formControlName="epuletSzerkezet" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Tető szerkezete</mat-label>
+      <input matInput formControlName="tetoSzerkezet" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Bejelentett személyek száma*</mat-label>
+      <input matInput type="number" formControlName="bejelentettSzemelyek" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Lakóépület m² és biztosítandó értéke*</mat-label>
+      <input matInput formControlName="lakoepuletErtek" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Melléképület m² és biztosítandó értéke</mat-label>
+      <input matInput formControlName="mellekepuletErtek" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Építmény (kerítés, tároló stb.) értéke</mat-label>
+      <input matInput formControlName="epitmenyErtek" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Ingóságok értéke</mat-label>
+      <input matInput formControlName="ingosagErtek" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Kiemelt ingóságok (ékszer, készpénz)</mat-label>
+      <input matInput formControlName="kiemeltErtek1" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Kiemelt ingóságok (festmény, antik bútor)</mat-label>
+      <input matInput formControlName="kiemeltErtek2" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Melléképületben tárolt ingóságok értéke</mat-label>
+      <input matInput formControlName="mellekIngosagErtek" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Általános ingóság értéke</mat-label>
+      <input matInput formControlName="altalanosIngosagErtek" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Különleges üvegek értéke (zuhanykabin, üveglapos bútor)</mat-label>
+      <input matInput formControlName="uvegErtek" [disabled]="isSubmitted">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Jelenlegi biztosító és kötvényszám</mat-label>
+      <input matInput formControlName="jelenlegiBiztosito" [disabled]="isSubmitted">
+    </mat-form-field>
+  </div>
+
+<mat-label>Mit szeretne biztosítani?*</mat-label>
+    <mat-radio-group formControlName="biztositasTipus" class="radio-group" [disabled]="isSubmitted">
+      <mat-radio-button value="epulet_ingosag">Épület és ingóság</mat-radio-button>
+      <mat-radio-button value="csak_epulet">Csak épület</mat-radio-button>
+      <mat-radio-button value="csak_ingosag">Csak ingóság</mat-radio-button>
+    </mat-radio-group>
+    <mat-error *ngIf="surveyForm.get('biztositasTipus')?.invalid">Kötelező mező</mat-error>
+
+    <mat-label>Lakottság*</mat-label>
+    <mat-radio-group formControlName="lakottsag" class="radio-group" [disabled]="isSubmitted">
+      <mat-radio-button value="allando">Állandóan lakott</mat-radio-button>
+      <mat-radio-button value="ideiglenes">Ideiglenesen lakott</mat-radio-button>
+    </mat-radio-group>
+    <mat-error *ngIf="surveyForm.get('lakottsag')?.invalid">Kötelező mező</mat-error>
+
+    
+
+  <div class="form-actions">
+    <button mat-raised-button color="primary" type="submit" [disabled]="surveyForm.invalid || isSubmitting">
+      {{ hasExistingResponse ? 'Frissítés' : 'Küldés' }}
+      <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
+    </button>
+
+    <button *ngIf="isSubmitted" mat-raised-button color="accent" type="button" (click)="enableEditing()" [disabled]="isSubmitting">
+      Módosítás
+    </button>
+  </div>
+</form>

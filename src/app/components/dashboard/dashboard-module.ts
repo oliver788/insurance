@@ -10,6 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+
+// Firebase Storage modul (compat verzió)
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 
 // Routing modul
 import { DashboardRoutingModule } from './dashboard-routing-module';
@@ -32,14 +36,18 @@ import { Navbar } from './navbar/navbar';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule,        // 💡 Hozzáadva
-    MatInputModule,            // 💡 Hozzáadva
+    MatFormFieldModule,
+    MatInputModule,
     MatRadioModule,
     MatButtonModule,
     MatSelectModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    DashboardRoutingModule
+    MatProgressBarModule,
+    DashboardRoutingModule,
+
+    // Importáld a Firebase Storage modult az NgModule-ba
+    AngularFireStorageModule,
   ],
   exports: [
     Navbar

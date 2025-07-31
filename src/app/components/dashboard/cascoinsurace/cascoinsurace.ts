@@ -1,11 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Auth, User, signOut } from '@angular/fire/auth';
 import { Firestore, doc, getDoc, updateDoc, setDoc, collection, getDocs } from '@angular/fire/firestore';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ChangeDetectorRef } from '@angular/core';
 import emailjs from 'emailjs-com';
+import { getStorage, ref, uploadString, getDownloadURL } from '@angular/fire/storage';
+import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-cascoinsurace',
@@ -17,9 +17,9 @@ export class Cascoinsurace implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private firestore = inject(Firestore);
-  private snackBar = inject(MatSnackBar);
   private cd = inject(ChangeDetectorRef);
   private auth = inject(Auth);
+  private zone = inject(NgZone);
 
   user: User = this.activatedRoute.snapshot.data['user'];
 
@@ -34,6 +34,9 @@ export class Cascoinsurace implements OnInit {
   isLoading: boolean = true;
   loadError: boolean = false;
   isSubmitting: boolean = false;
+  isUploading: boolean = false;
+  uploadProgress: number = 0;
+  uploadedImageUrl: string = '';
 
   allResponses: any[] = [];
   isLoadingAdminResponses: boolean = false;
@@ -54,6 +57,7 @@ export class Cascoinsurace implements OnInit {
   private initializeForm(): void {
     this.surveyForm = new FormGroup({
       szerzodoNev: new FormControl('', Validators.required),
+      telefon: new FormControl('', Validators.required),
       szerzodoCim: new FormControl('', Validators.required),
       szuletesiDatum: new FormControl('', Validators.required),
       anyjaNeve: new FormControl('', Validators.required),
@@ -90,11 +94,15 @@ export class Cascoinsurace implements OnInit {
         this.surveyForm.patchValue(docSnap.data());
         this.isSubmitted = true;
         this.surveyForm.disable();
+        console.log('User response loaded:', docSnap.data());
+      } else {
+        console.log('No previous response found for user:', this.user.uid);
       }
+
       this.handleLoadComplete(true);
     } catch (error) {
       console.error('Error loading response:', error);
-      this.showSnackbar('Hiba történt az adatok betöltésekor');
+      console.log('Hiba történt az adatok betöltésekor');
       this.handleLoadComplete(false, true);
     } finally {
       this.cd.detectChanges();
@@ -107,9 +115,10 @@ export class Cascoinsurace implements OnInit {
       const answersRef = collection(this.firestore, 'answers');
       const querySnapshot = await getDocs(answersRef);
       this.allResponses = querySnapshot.docs.map(doc => doc.data());
+      console.log('All responses loaded for admin:', this.allResponses.length);
     } catch (error) {
       console.error('Error loading all responses:', error);
-      this.showSnackbar('Hiba történt az admin adatok betöltésekor');
+      console.log('Hiba történt az admin adatok betöltésekor');
     } finally {
       this.isLoadingAdminResponses = false;
       this.cd.detectChanges();
@@ -119,9 +128,6 @@ export class Cascoinsurace implements OnInit {
   private handleLoadComplete(success: boolean, error: boolean = false): void {
     this.isLoading = false;
     this.loadError = error;
-    if (!success && !error) {
-      this.loadError = false;
-    }
   }
 
   async onSignout(): Promise<void> {
@@ -130,7 +136,7 @@ export class Cascoinsurace implements OnInit {
       this.router.navigate(['/auth/login']);
     } catch (error) {
       console.error('Sign out error:', error);
-      this.showSnackbar('Hiba történt a kijelentkezéskor');
+      console.log('Hiba történt a kijelentkezéskor');
     }
   }
 
@@ -155,13 +161,15 @@ export class Cascoinsurace implements OnInit {
     try {
       if (this.hasExistingResponse) {
         await updateDoc(doc(this.firestore, 'answers', this.existingDocId), formData);
-        this.showSnackbar('Sikeresen módosítva!');
+        console.log('Document updated:', this.existingDocId, formData);
+        console.log('Sikeresen módosítva!');
         await this.sendEmail('update');
       } else {
         await setDoc(doc(this.firestore, 'answers', this.user.uid), formData);
+        console.log('Document created:', this.user.uid, formData);
         this.hasExistingResponse = true;
         this.existingDocId = this.user.uid;
-        this.showSnackbar('Sikeresen elküldve!');
+        console.log('Sikeresen elküldve!');
         await this.sendEmail('new');
       }
 
@@ -169,7 +177,7 @@ export class Cascoinsurace implements OnInit {
       this.surveyForm.disable();
     } catch (error) {
       console.error('Submission error:', error);
-      this.showSnackbar('Hiba történt a beküldéskor');
+      console.log('Hiba történt a beküldéskor');
     } finally {
       this.isSubmitting = false;
       this.cd.detectChanges();
@@ -178,19 +186,100 @@ export class Cascoinsurace implements OnInit {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.selectedImageBase64 = reader.result as string;
-        this.selectedImageUrl = reader.result as string;
-      };
-      reader.onerror = (err) => {
-        console.error('Kép beolvasási hiba:', err);
-        this.showSnackbar('Hiba történt a kép beolvasásakor');
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      console.log('Nincs fájl kiválasztva');
+      return;
     }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64 = reader.result as string;
+
+      if (!base64.startsWith('data:image/')) {
+        console.log('A fájl nem kép típusú.');
+        return;
+      }
+
+      setTimeout(() => {
+        this.selectedImageBase64 = base64;
+        this.selectedImageUrl = base64;
+        this.cd.detectChanges();
+      });
+
+      this.uploadImage(base64);
+    };
+
+    reader.onerror = (err) => {
+      console.error('Kép beolvasási hiba:', err);
+      console.log('Nem sikerült beolvasni a képet');
+    };
+
+    reader.readAsDataURL(file);
   }
+
+private async uploadImage(base64: string): Promise<void> {
+  console.log('uploadImage called');
+  const storage = getStorage();
+
+  // A user.uid-val szeretnéd a képet menteni, itt biztosítsd, hogy a user létezik
+  if (!this.user?.uid) {
+    console.error('Nincs felhasználói azonosító, nem lehet feltölteni a képet.');
+    return;
+  }
+
+  const imageRef = ref(storage, `casco_uploads/${this.user.uid}.jpg`);
+  console.log('Storage ref:', imageRef.fullPath);
+
+  this.isUploading = true;
+
+  try {
+    console.log('Starting uploadString...');
+    console.log('Base64 length:', base64.length);
+
+    // Ellenőrizd, hogy a base64 string "data:image/..." formátumban van-e
+    if (!base64.startsWith('data:image/')) {
+      console.error('Nem képfájl a base64 string:', base64.slice(0, 30));
+      throw new Error('Nem képfájl a base64 adat');
+    }
+
+    // Itt a Firebase Storage uploadString metódusa a "data_url" formátumot várja,
+    // nem "base64"-et, ha a string data URL formátumban van (pl. data:image/jpeg;base64,...)
+    await uploadString(imageRef, base64, 'data_url');
+
+    console.log('Upload successful!');
+
+    // Letöltési URL lekérése
+    const downloadURL = await getDownloadURL(imageRef);
+    this.uploadedImageUrl = downloadURL;
+    console.log('Download URL:', downloadURL);
+    console.log('Kép sikeresen feltöltve!');
+  } catch (err: any) {
+    console.error('Hiba történt a kép feltöltésekor:', err);
+
+    if (err?.code) {
+      console.error('Firebase Storage error code:', err.code);
+    }
+    if (err?.message) {
+      console.error('Firebase Storage error message:', err.message);
+    }
+    if (err?.customData) {
+      console.error('Custom error data:', err.customData);
+    }
+    if (err?.serverResponse) {
+      console.error('Server response:', err.serverResponse);
+    }
+    if (err?.stack) {
+      console.error('Stack trace:', err.stack);
+    }
+
+    console.log('Hiba a kép feltöltésekor');
+  } finally {
+    this.isUploading = false;
+    this.cd.detectChanges();
+  }
+}
+
 
   private async sendEmail(type: 'new' | 'update') {
     const form = this.surveyForm.value;
@@ -201,25 +290,7 @@ export class Cascoinsurace implements OnInit {
         ? 'Köszönjük, hogy beküldte a Casco ajánlatkérőt!'
         : 'A Casco űrlap sikeresen frissítve lett.',
       user_email: this.user.email,
-      szerzodoNev: form.szerzodoNev,
-      szerzodoCim: form.szerzodoCim,
-      szuletesiDatum: form.szuletesiDatum,
-      anyjaNeve: form.anyjaNeve,
-      cegAdoszam: form.cegAdoszam,
-      szerzodesOka: form.szerzodesOka,
-      rendszam: form.rendszam,
-      alvazszam: form.alvazszam,
-      forgalmiSzam: form.forgalmiSzam,
-      jarmuKategoria: form.jarmuKategoria,
-      gyarto: form.gyarto,
-      tipus: form.tipus,
-      gyartasiEv: form.gyartasiEv,
-      hengerurtartalom: form.hengerurtartalom,
-      teljesitmeny: form.teljesitmeny,
-      uzemanyag: form.uzemanyag,
-      kmAllas: form.kmAllas,
-      karmentesEvek: form.karmentesEvek,
-      image_data: this.selectedImageBase64 || ''
+      ...form
     };
 
     try {
@@ -232,13 +303,8 @@ export class Cascoinsurace implements OnInit {
       console.log('Email sent successfully!');
     } catch (error) {
       console.error('Email sending failed:', error);
-      this.showSnackbar('Hiba történt az email küldésekor');
+      console.log('Hiba történt az email küldésekor');
     }
-  }
-
-  private showSnackbar(message: string): void {
-    this.submissionMessage = message;
-    this.snackBar.open(message, 'OK', { duration: 3000 });
   }
 
   retryLoad(): void {

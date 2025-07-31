@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
 <div class="loading-spinner" *ngIf="isLoading">
-  <mat-spinner></mat-spinner>
+  <mat-spinner id="spinner"></mat-spinner>
   <p>Adatok betöltése...</p>
 </div>
 
@@ -12,7 +12,7 @@
 
 <form *ngIf="!isLoading && !loadError" [formGroup]="surveyForm" (ngSubmit)="submitForm()" class="casco-form">
   <h2>Casco biztosítási ajánlathoz szükséges adatok</h2>
-
+   <p class="note"><strong>Megjegyzés:</strong> Forgalmi engedély másolata esetén nem szükséges a járműadatokat kitölteni. Elég az űrlap alján lévő résznél feltölteni.</p>
   <div class="grid">
     <!-- Személyes adatok -->
     <mat-form-field appearance="fill">
@@ -20,6 +20,13 @@
       <input matInput formControlName="szerzodoNev" [disabled]="isSubmitted">
       <mat-error *ngIf="surveyForm.get('szerzodoNev')?.invalid">Kötelező mező</mat-error>
     </mat-form-field>
+
+  <mat-form-field appearance="fill">
+      <mat-label>Telefon*</mat-label>
+      <input matInput  type="number" formControlName="telefon" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('telefon')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
 
     <mat-form-field appearance="fill">
       <mat-label>Állandó lakcím / székhely*</mat-label>
@@ -40,7 +47,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Adószám (ha cég)</mat-label>
+      <mat-label>Adószám (cég esetén )</mat-label>
       <input matInput formControlName="cegAdoszam" [disabled]="isSubmitted">
     </mat-form-field>
 
@@ -121,7 +128,7 @@
   <div class="form-section">
     <mat-label>Casco szerződéskötés oka*</mat-label>
     <mat-radio-group formControlName="szerzodesOka" class="radio-group" [disabled]="isSubmitted">
-      <mat-radio-button value="tulajdonszerzes">Tulajdonszerzés</mat-radio-button>
+      <mat-radio-button value="tulajdonszerzes">Gépjármű tulajdonjogának és üzembentartói jogának megszerzése</mat-radio-button>
       <mat-radio-button value="biztositovaltas">Biztosítóváltás</mat-radio-button>
       <mat-radio-button value="egyeb">Egyéb</mat-radio-button>
     </mat-radio-group>
@@ -148,7 +155,7 @@
         <a [href]="uploadedImageUrl" target="_blank">Kép megnyitása új lapon</a>
       </p>
     </div>
-    <p class="note"><strong>Megjegyzés:</strong> Forgalmi engedély másolata esetén nem szükséges a járműadatokat kitölteni.</p>
+ 
   </div>
 
   <div class="form-actions">
@@ -160,6 +167,5 @@
     <button *ngIf="isSubmitted" mat-raised-button color="accent" type="button" (click)="enableEditing()" [disabled]="isSubmitting">
       Módosítás
     </button>
-
   </div>
 </form>

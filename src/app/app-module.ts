@@ -27,7 +27,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'; // SnackBar mod
     provideFirebaseApp(() => initializeApp({ 
       projectId: "succses-f8106", 
       appId: "1:861930410588:web:59bcc112cecc0ceaf00c99", 
-      storageBucket: "succses-f8106.appspot.com", // Javított storageBucket érték
+      storageBucket: "gs://succses-f8106.firebasestorage.app", // Javított storageBucket érték
       apiKey: "AIzaSyB5QZG970lgCK7w1TvqUCZK1WfZL19YZkI", 
       authDomain: "succses-f8106.firebaseapp.com", 
       messagingSenderId: "861930410588", 

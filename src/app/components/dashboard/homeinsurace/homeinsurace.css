@@ -1,0 +1,95 @@
+.insurance-form {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    color: #003865;
+    margin-bottom: 2rem;
+  }
+
+  .note {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    color: #003865;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    border: 2px solid #009fe3;
+    border-radius: 6px;
+
+    mat-radio-button {
+      margin: 0.25rem 0;
+      font-size: 0.95rem;
+      color: #003865;
+
+      .mat-radio-inner-circle {
+        background-color: #009fe3 !important;
+      }
+
+      .mat-radio-outer-circle {
+        border-color: #009fe3 !important;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+
+    button {
+      min-width: 140px;
+      font-weight: bold;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+
+      &.mat-raised-button[color="primary"] {
+        background-color: #009fe3;
+        color: white;
+
+        &:hover {
+          background-color: #007bb6;
+        }
+      }
+
+      &.mat-raised-button[color="accent"] {
+        background-color: #003865;
+        color: white;
+
+        &:hover {
+          background-color: #002744;
+        }
+      }
+
+      .button-spinner {
+        margin-left: 8px;
+      }
+    }
+  }
+}

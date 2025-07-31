@@ -1,122 +1,183 @@
-
 <app-navbar></app-navbar>
 
+<div class="loading-spinner" *ngIf="isLoading">
+  <mat-spinner id="spinner"></mat-spinner>
+  <p>Adatok betöltése...</p>
+</div>
+
+<div *ngIf="loadError" class="error-message">
+  <p>Hiba történt az adatok betöltésekor.</p>
+  <button mat-raised-button color="primary" (click)="retryLoad()">Újrapróbálkozás</button>
+</div>
+
+<form *ngIf="!isLoading && !loadError" [formGroup]="surveyForm" (ngSubmit)="submitForm()" class="kgfb-form">
+  <h2>KGFB biztosítási ajánlathoz szükséges adatok</h2>
+
+  <p class="note">
+    <strong>Megjegyzés:</strong> Forgalmi engedély másolata esetén nem szükséges a járműadatokat kitölteni. Elég az űrlap alján lévő résznél feltölteni.
+  </p>
+
+  <div class="grid">
+    <!-- Személyes adatok -->
+    <mat-form-field appearance="fill">
+      <mat-label>Szerződő neve*</mat-label>
+      <input matInput formControlName="szerzodoNev" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('szerzodoNev')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Telefon*</mat-label>
+      <input matInput type="tel" formControlName="telefon" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('telefon')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Állandó lakcím / székhely*</mat-label>
+      <input matInput formControlName="szerzodoCim" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('szerzodoCim')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Születési dátum*</mat-label>
+      <input matInput type="date" formControlName="szuletesiDatum" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('szuletesiDatum')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Édesanya leánykori neve*</mat-label>
+      <input matInput formControlName="anyjaNeve" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('anyjaNeve')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Adószám (cég esetén)</mat-label>
+      <input matInput formControlName="cegAdoszam" [disabled]="isSubmitted">
+    </mat-form-field>
 
 
-<form *ngIf="!isLoading && !loadError" [formGroup]="surveyForm" (ngSubmit)="submitForm()">
-  <h2>Kötelező biztosítási ajánlathoz szükséges adatok</h2>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Szerződő neve</mat-label>
-    <input matInput formControlName="szerzodoNev" required>
-  </mat-form-field>
+    <!-- Jármű adatok -->
+    <mat-form-field appearance="fill">
+      <mat-label>Rendszám*</mat-label>
+      <input matInput formControlName="rendszam" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('rendszam')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Állandó lakcím / székhely</mat-label>
-    <input matInput formControlName="szerzodoCim" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Alvázszám*</mat-label>
+      <input matInput formControlName="alvazszam" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('alvazszam')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Születési dátum</mat-label>
-    <input matInput type="date" formControlName="szuletesiDatum" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Forgalmi engedély száma*</mat-label>
+      <input matInput formControlName="forgalmiSzam" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('forgalmiSzam')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Édesanya leánykori neve</mat-label>
-    <input matInput formControlName="anyjaNeve" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Járműkategória*</mat-label>
+      <input matInput formControlName="jarmuKategoria" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('jarmuKategoria')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Adószám (ha cég)</mat-label>
-    <input matInput formControlName="cegAdoszam">
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Gépjármű gyártmánya*</mat-label>
+      <input matInput formControlName="gyarto" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('gyarto')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-label>Casco szerződéskötés oka</mat-label>
-  <mat-radio-group formControlName="szerzodesOka" class="radio-group">
-    <mat-radio-button value="tulajdonszerzes">Gépjármű tulajdonjogának és üzembentartói jogának megszerzése</mat-radio-button>
-    <mat-radio-button value="biztositovaltas">Biztosítóváltás</mat-radio-button>
-    <mat-radio-button value="egyeb">Egyéb</mat-radio-button>
-  </mat-radio-group>
+    <mat-form-field appearance="fill">
+      <mat-label>Pontos típus*</mat-label>
+      <input matInput formControlName="tipus" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('tipus')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <p><strong>Forgalmi engedély másolata esetén nem szükséges a járműadatokat kitölteni.</strong></p>
+    <mat-form-field appearance="fill">
+      <mat-label>Gyártási év*</mat-label>
+      <input matInput type="number" formControlName="gyartasiEv" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('gyartasiEv')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Rendszám</mat-label>
-    <input matInput formControlName="rendszam" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Hengerűrtartalom (cm³)*</mat-label>
+      <input matInput type="number" formControlName="hengerurtartalom" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('hengerurtartalom')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Alvázszám</mat-label>
-    <input matInput formControlName="alvazszam" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Teljesítmény (LE)*</mat-label>
+      <input matInput type="number" formControlName="teljesitmeny" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('teljesitmeny')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Forgalmi engedély száma</mat-label>
-    <input matInput formControlName="forgalmiSzam" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Üzemanyag típusa*</mat-label>
+      <input matInput formControlName="uzemanyag" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('uzemanyag')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Járműkategória</mat-label>
-    <input matInput formControlName="jarmuKategoria" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Kilométeróra aktuális állása*</mat-label>
+      <input matInput type="number" formControlName="kmAllas" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('kmAllas')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Gépjármű gyártmánya</mat-label>
-    <input matInput formControlName="gyarto" required>
-  </mat-form-field>
+    <!-- Új mezők -->
+    <mat-form-field appearance="fill">
+      <mat-label>Kártörténeti adatok*</mat-label>
+      <mat-select formControlName="kartortenet" [disabled]="isSubmitted">
+        <mat-option value="ujBelepo">Új belépő</mat-option>
+        <mat-option value="nemUjBelepo">Nem új belépő</mat-option>
+      </mat-select>
+      <mat-error *ngIf="surveyForm.get('kartortenet')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Pontos típus</mat-label>
-    <input matInput formControlName="tipus" required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Bonus-malus fokozat*</mat-label>
+      <input matInput formControlName="bonuszFokozat" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('bonuszFokozat')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+  </div>
+    <!-- Szerződés oka -->
+    <div class="form-section">
+      <mat-label>KGFB szerződéskötés oka*</mat-label>
+      <mat-radio-group formControlName="szerzodesOka" class="radio-group" [disabled]="isSubmitted">
+        <mat-radio-button value="tulajdonszerzes">Gépjármű tulajdonjogának és üzembentartói jogának megszerzése</mat-radio-button>
+        <mat-radio-button value="biztositovaltas">Biztosítóváltás</mat-radio-button>
+        <mat-radio-button value="egyeb">Egyéb</mat-radio-button>
+      </mat-radio-group>
+      <mat-error *ngIf="surveyForm.get('szerzodesOka')?.invalid">Kötelező mező</mat-error>
+    </div>
+  <!-- Kép feltöltés -->
+  <div class="form-section">
+    <h3>Forgalmi engedély feltöltése</h3>
+    <div class="form-group">
+      <label>Forgalmi engedély kép feltöltése</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" [disabled]="isSubmitted" />
+      <div *ngIf="isUploading" class="upload-progress">
+        <p>Feltöltés folyamatban: {{uploadProgress}}%</p>
+        <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+      </div>
+    </div>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Gyártási év</mat-label>
-    <input matInput type="number" formControlName="gyartasiEv" required>
-  </mat-form-field>
+    <div *ngIf="selectedImageUrl" class="image-preview">
+      <p>Feltöltött kép előnézete:</p>
+      <img [src]="selectedImageUrl" alt="Forgalmi engedély kép" />
+      <p *ngIf="uploadedImageUrl" class="image-url">
+        <a [href]="uploadedImageUrl" target="_blank">Kép megnyitása új lapon</a>
+      </p>
+    </div>
+  </div>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Hengerűrtartalom (cm³)</mat-label>
-    <input matInput type="number" formControlName="hengerurtartalom" required>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Teljesítmény (LE)</mat-label>
-    <input matInput type="number" formControlName="teljesitmeny" required>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Üzemanyag típusa</mat-label>
-    <input matInput formControlName="uzemanyag" required>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Kilométeróra aktuális állása</mat-label>
-    <input matInput type="number" formControlName="kmAllas" required>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Igazolható kármentes évek száma</mat-label>
-    <input matInput type="number" formControlName="karmentesEvek" required>
-  </mat-form-field>
-
+  <!-- Gombok -->
   <div class="form-actions">
-    <button 
-      mat-raised-button 
-      color="primary" 
-      type="submit" 
-      [disabled]="surveyForm.invalid || isSubmitting">
+    <button mat-raised-button color="primary" type="submit" [disabled]="surveyForm.invalid || isSubmitting || isUploading">
       {{ hasExistingResponse ? 'Frissítés' : 'Küldés' }}
       <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
     </button>
 
-    <button 
-      *ngIf="isSubmitted"
-      mat-raised-button 
-      color="accent" 
-      type="button"
-      (click)="enableEditing()"
-      [disabled]="isSubmitting">
+    <button *ngIf="isSubmitted" mat-raised-button color="accent" type="button" (click)="enableEditing()" [disabled]="isSubmitting">
       Módosítás
     </button>
   </div>
