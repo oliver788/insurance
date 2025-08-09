@@ -8,11 +8,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ChangeDetectorRef } from '@angular/core';
 import emailjs from 'emailjs-com';
 import { getStorage, ref, getDownloadURL } from '@angular/fire/storage';
-
+import { Footer } from '../../footer/footer';
 @Component({
   selector: 'app-home',
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
+  
   standalone: false
 })
 export class Home implements OnInit {

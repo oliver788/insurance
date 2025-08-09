@@ -8,7 +8,8 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage'; // Storage import hozzáadva
 import { WelcomePage } from './components/welcome-page/welcome-page';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar'; // SnackBar modul hozzáadva
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Footer } from './components/footer/footer'; // SnackBar modul hozzáadva
 
 @NgModule({
   declarations: [

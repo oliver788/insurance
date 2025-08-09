@@ -7,6 +7,61 @@
       Kijelentkezés
     </button>
   </header>
+<hr>
+<div *ngIf="!isAdmin" class="card-grid mt-5">
+
+  <div class="card" [routerLink]="['/dashboard/cascoinsurace']">
+    <div class="card-hover-overlay">
+      <span>Ugrás a kérdőívre</span>
+    </div>
+    <img src="/cards/casco_404x184_808x368.jpg" class="card-img-top" alt="casco biztosítás">
+    <div class="card-body">
+      <h5 class="card-title">Casco biztosítás</h5>
+      <p class="card-text">
+        Legyen az autód is biztonságban! A K&H casco biztosítása választott fedezettől függően védelmet nyújthat a gépjárművet ért törés, lopás és elemi károk esetén is.
+      </p>
+    </div>
+  </div>
+
+  <div class="card" [routerLink]="['/dashboard/compulsoryinsurace']">
+    <div class="card-hover-overlay">
+      <span>Ugrás a kérdőívre</span>
+    </div>
+    <img src="/cards/GFB_404x184_808x368.jpg" class="card-img-top" alt="kötelező gépjármű-felelősségbiztosítás">
+    <div class="card-body">
+      <h5 class="card-title">Kötelező gépjármű-felelősségbiztosítás</h5>
+      <p class="card-text">
+        Nem mindegy, hogy hol és mennyiért kötöd meg kötelező biztosításod.
+      </p>
+    </div>
+  </div>
+
+  <div class="card" [routerLink]="['/dashboard/homeinsurace']">
+    <div class="card-hover-overlay">
+      <span>Ugrás a kérdőívre</span>
+    </div>
+    <img src="/cards/lakasbiztositas-kartya_812x370.jpg" class="card-img-top" alt="lakásbiztosítás">
+    <div class="card-body">
+      <h5 class="card-title">Lakásbiztosítás</h5>
+      <p class="card-text">
+        Teljes körű biztosítási védelem ingó és ingóságaidra, kiegészítő fedezetekkel az igényeidre szabva. Kösd meg azonnal.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+
+<hr>
+
+
+
+
+
+
+
+
+
 
   <div *ngIf="isAdmin" class="admin-message">
     <h2>Üdv, Admin!</h2>
@@ -52,3 +107,4 @@
 
   
 </div>
+<app-footer  class="bg-body-tertiary text-center text-lg-start mt-auto"></app-footer>

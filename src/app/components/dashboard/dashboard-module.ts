@@ -24,6 +24,7 @@ import { Homeinsurace } from './homeinsurace/homeinsurace';
 import { Compulsoryinsurace } from './compulsoryinsurace/compulsoryinsurace';
 import { Cascoinsurace } from './cascoinsurace/cascoinsurace';
 import { Navbar } from './navbar/navbar';
+import { Footer } from '../footer/footer';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { Navbar } from './navbar/navbar';
     Homeinsurace,
     Compulsoryinsurace,
     Cascoinsurace,
-    Navbar
+    Navbar, 
+    Footer
   ],
   imports: [
     CommonModule,
@@ -50,7 +52,8 @@ import { Navbar } from './navbar/navbar';
     AngularFireStorageModule,
   ],
   exports: [
-    Navbar
+    Navbar,
+    Footer
   ]
 })
 export class DashboardModule { }
