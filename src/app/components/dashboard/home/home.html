@@ -2,7 +2,8 @@
 
 <div class="container">
   <header>
-    <h1>Üdvözöljük a kérdőív oldalon!</h1>
+    <h1>Biztosítási kérdőíveink:
+</h1>
     <button mat-raised-button color="warn" (click)="onSignout()">
       Kijelentkezés
     </button>
@@ -53,7 +54,16 @@
 
 
 <hr>
+<div *ngIf="!isAdmin" id="maintext">
+<h2>További fontos információk</h2>
 
+<p>A megfelelő kérdőív kitöltését követően munkatársaink értesítést kapnak, és a válaszok rögzítésre kerülnek.
+
+Bármilyen jellegű probléma esetén az oldal alján található elérhetőségen keresztül tudsz kapcsolatba lépni velünk.</p>
+
+
+
+</div>
 
 
 

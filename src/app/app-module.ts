@@ -15,12 +15,17 @@ import { Footer } from './components/footer/footer'; // SnackBar modul hozzáadv
   declarations: [
     App,
     WelcomePage,
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     MatButtonModule,
-    MatSnackBarModule // SnackBar modul importálva
+    MatSnackBarModule, // SnackBar modul importálva
+  
+  ],
+  exports: [
+    
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

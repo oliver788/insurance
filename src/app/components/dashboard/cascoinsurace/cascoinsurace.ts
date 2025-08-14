@@ -281,31 +281,33 @@ private async uploadImage(base64: string): Promise<void> {
 }
 
 
-  private async sendEmail(type: 'new' | 'update') {
-    const form = this.surveyForm.value;
+ private async sendEmail(type: 'new' | 'update') {
+  const form = this.surveyForm.value;
 
-    const templateParams = {
-      to_email: this.user.email,
-      message: type === 'new'
-        ? 'Köszönjük, hogy beküldte a Casco ajánlatkérőt!'
-        : 'A Casco űrlap sikeresen frissítve lett.',
-      user_email: this.user.email,
-      ...form
-    };
+  const templateParams = {
+    to_email: this.user.email,
+    message: type === 'new'
+      ? 'Köszönjük, hogy beküldte a Casco ajánlatkérőt!'
+      : 'A Casco űrlap sikeresen frissítve lett.',
+    user_email: this.user.email,
+    image_data: this.uploadedImageUrl || '', // <<< ide tesszük a Firebase kép URL-jét
+    ...form
+  };
 
-    try {
-      await emailjs.send(
-        'service_3l4skcp',
-        'template_4wnlnco',
-        templateParams,
-        '1HoL76uozXpANfljR'
-      );
-      console.log('Email sent successfully!');
-    } catch (error) {
-      console.error('Email sending failed:', error);
-      console.log('Hiba történt az email küldésekor');
-    }
+  try {
+    await emailjs.send(
+      'service_3l4skcp',
+      'template_4wnlnco',
+      templateParams,
+      '1HoL76uozXpANfljR'
+    );
+    console.log('Email sent successfully!');
+  } catch (error) {
+    console.error('Email sending failed:', error);
+    console.log('Hiba történt az email küldésekor');
   }
+}
+
 
   retryLoad(): void {
     this.isLoading = true;

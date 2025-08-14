@@ -226,7 +226,7 @@ export class Compulsoryinsurace implements OnInit {
       kmAllas: form.kmAllas,
       kartortenet: form.kartortenet,
       bonuszFokozat: form.bonuszFokozat,
-      image_data: this.selectedImageBase64 || ''
+   image_data: this.uploadedImageUrl || '', // <<< ide tesszük a Firebase kép URL-jét
     };
 
     try {

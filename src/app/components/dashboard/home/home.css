@@ -85,9 +85,10 @@
   border-top-color: #003865;
 }
 
-
-
-
-app-footer{
-  
+#maintext{
+  margin: 20px;
+  margin-bottom: 80px;
+}
+.uploaded-image{
+  width: 100px ;
 }

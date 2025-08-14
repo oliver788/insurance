@@ -1,4 +1,24 @@
-#hatter{
-    background-color: #003865 !important;
-    color: white;
+#footer {
+  background-color: #003865;
+  color: #f0f0f0;
+  padding: 1.5rem;
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#footer p {
+  margin: 0.5rem 0;
+}
+
+.copyright {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
