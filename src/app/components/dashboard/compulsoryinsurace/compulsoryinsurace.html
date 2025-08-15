@@ -10,13 +10,9 @@
   <button mat-raised-button color="primary" (click)="retryLoad()">Újrapróbálkozás</button>
 </div>
 
-<form *ngIf="!isLoading && !loadError" [formGroup]="surveyForm" (ngSubmit)="submitForm()" class="kgfb-form">
-  <h2>KGFB biztosítási ajánlathoz szükséges adatok</h2>
-
-  <p class="note">
-    <strong>Megjegyzés:</strong> Forgalmi engedély másolata esetén nem szükséges a járműadatokat kitölteni. Elég az űrlap alján lévő résznél feltölteni.
-  </p>
-
+<form *ngIf="!isLoading && !loadError" [formGroup]="surveyForm" (ngSubmit)="submitForm()" class="casco-form">
+  <h2>Kgfb biztosítási ajánlathoz szükséges adatok</h2>
+   <p class="note"><strong>Megjegyzés:</strong> Forgalmi engedély másolata esetén nem szükséges a járműadatokat kitölteni. Elég az űrlap alján lévő résznél feltölteni.</p>
   <div class="grid">
     <!-- Személyes adatok -->
     <mat-form-field appearance="fill">
@@ -25,11 +21,12 @@
       <mat-error *ngIf="surveyForm.get('szerzodoNev')?.invalid">Kötelező mező</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill">
       <mat-label>Telefon*</mat-label>
-      <input matInput type="tel" formControlName="telefon" [disabled]="isSubmitted">
+      <input matInput  type="number" formControlName="telefon" [disabled]="isSubmitted">
       <mat-error *ngIf="surveyForm.get('telefon')?.invalid">Kötelező mező</mat-error>
     </mat-form-field>
+
 
     <mat-form-field appearance="fill">
       <mat-label>Állandó lakcím / székhely*</mat-label>
@@ -50,11 +47,9 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Adószám (cég esetén)</mat-label>
+      <mat-label>Adószám (cég esetén )</mat-label>
       <input matInput formControlName="cegAdoszam" [disabled]="isSubmitted">
     </mat-form-field>
-
-
 
     <!-- Jármű adatok -->
     <mat-form-field appearance="fill">
@@ -123,33 +118,30 @@
       <mat-error *ngIf="surveyForm.get('kmAllas')?.invalid">Kötelező mező</mat-error>
     </mat-form-field>
 
-    <!-- Új mezők -->
-    <mat-form-field appearance="fill">
-      <mat-label>Kártörténeti adatok*</mat-label>
-      <mat-select formControlName="kartortenet" [disabled]="isSubmitted">
-        <mat-option value="ujBelepo">Új belépő</mat-option>
-        <mat-option value="nemUjBelepo">Nem új belépő</mat-option>
-      </mat-select>
-      <mat-error *ngIf="surveyForm.get('kartortenet')?.invalid">Kötelező mező</mat-error>
-    </mat-form-field>
-
     <mat-form-field appearance="fill">
       <mat-label>Bonus-malus fokozat*</mat-label>
-      <input matInput formControlName="bonuszFokozat" [disabled]="isSubmitted">
-      <mat-error *ngIf="surveyForm.get('bonuszFokozat')?.invalid">Kötelező mező</mat-error>
+      <input matInput type="number" formControlName="BonusMalus" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('BonusMalus')?.invalid">Kötelező mező</mat-error>
+    </mat-form-field>
+
+      <mat-form-field appearance="fill">
+      <mat-label>Kártörténeti adatok*</mat-label>
+      <input matInput type="number" formControlName="kartortenetiAdatok" [disabled]="isSubmitted">
+      <mat-error *ngIf="surveyForm.get('kartortenetiAdatok')?.invalid">Kötelező mező</mat-error>
     </mat-form-field>
   </div>
-    <!-- Szerződés oka -->
-    <div class="form-section">
-      <mat-label>KGFB szerződéskötés oka*</mat-label>
-      <mat-radio-group formControlName="szerzodesOka" class="radio-group" [disabled]="isSubmitted">
-        <mat-radio-button value="tulajdonszerzes">Gépjármű tulajdonjogának és üzembentartói jogának megszerzése</mat-radio-button>
-        <mat-radio-button value="biztositovaltas">Biztosítóváltás</mat-radio-button>
-        <mat-radio-button value="egyeb">Egyéb</mat-radio-button>
-      </mat-radio-group>
-      <mat-error *ngIf="surveyForm.get('szerzodesOka')?.invalid">Kötelező mező</mat-error>
-    </div>
-  <!-- Kép feltöltés -->
+
+  <div class="form-section">
+    <mat-label>Casco szerződéskötés oka*</mat-label>
+    <mat-radio-group formControlName="szerzodesOka" class="radio-group" [disabled]="isSubmitted">
+      <mat-radio-button value="tulajdonszerzes">Gépjármű tulajdonjogának és üzembentartói jogának megszerzése</mat-radio-button>
+      <mat-radio-button value="biztositovaltas">Biztosítóváltás</mat-radio-button>
+      <mat-radio-button value="egyeb">Egyéb</mat-radio-button>
+    </mat-radio-group>
+    <mat-error *ngIf="surveyForm.get('szerzodesOka')?.invalid">Kötelező mező</mat-error>
+  </div>
+
+  <!-- Kép feltöltése -->
   <div class="form-section">
     <h3>Forgalmi engedély feltöltése</h3>
     <div class="form-group">
@@ -172,7 +164,6 @@
  
   </div>
 
-  <!-- Gombok -->
   <div class="form-actions">
     <button mat-raised-button color="primary" type="submit" [disabled]="surveyForm.invalid || isSubmitting || isUploading">
       {{ hasExistingResponse ? 'Frissítés' : 'Küldés' }}
@@ -184,4 +175,3 @@
     </button>
   </div>
 </form>
-<app-footer  class="bg-body-tertiary text-center text-lg-start mt-auto"></app-footer>
