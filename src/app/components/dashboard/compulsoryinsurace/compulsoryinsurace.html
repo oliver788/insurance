@@ -161,6 +161,7 @@
       </div>
     </div>
 
+    <!-- Kép előnézet -->
     <div *ngIf="selectedImageUrl" class="image-preview">
       <p>Feltöltött kép előnézete:</p>
       <img [src]="selectedImageUrl" alt="Forgalmi engedély kép" />
@@ -168,6 +169,7 @@
         <a [href]="uploadedImageUrl" target="_blank">Kép megnyitása új lapon</a>
       </p>
     </div>
+ 
   </div>
 
   <!-- Gombok -->

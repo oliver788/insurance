@@ -198,50 +198,32 @@ export class Compulsoryinsurace implements OnInit {
   }
 
   private async sendEmail(type: 'new' | 'update') {
-    const form = this.surveyForm.value;
+  const form = this.surveyForm.value;
 
-    const templateParams = {
-      to_email: this.user.email,
-      message: type === 'new'
-        ? 'Köszönjük, hogy beküldte a kötelező biztosítási ajánlatkérőt!'
-        : 'A kötelező biztosítási űrlap sikeresen frissítve lett.',
-      user_email: this.user.email,
-      szerzodoNev: form.szerzodoNev,
-      telefon: form.telefon,
-      szerzodoCim: form.szerzodoCim,
-      szuletesiDatum: form.szuletesiDatum,
-      anyjaNeve: form.anyjaNeve,
-      cegAdoszam: form.cegAdoszam,
-      szerzodesOka: form.szerzodesOka,
-      rendszam: form.rendszam,
-      alvazszam: form.alvazszam,
-      forgalmiSzam: form.forgalmiSzam,
-      jarmuKategoria: form.jarmuKategoria,
-      gyarto: form.gyarto,
-      tipus: form.tipus,
-      gyartasiEv: form.gyartasiEv,
-      hengerurtartalom: form.hengerurtartalom,
-      teljesitmeny: form.teljesitmeny,
-      uzemanyag: form.uzemanyag,
-      kmAllas: form.kmAllas,
-      kartortenet: form.kartortenet,
-      bonuszFokozat: form.bonuszFokozat,
-   image_data: this.uploadedImageUrl || '', // <<< ide tesszük a Firebase kép URL-jét
-    };
+  const templateParams = {
+    to_email: this.user.email,
+    message: type === 'new'
+      ? 'Köszönjük, hogy beküldte a kötelező biztosítási ajánlatkérőt!'
+      : 'A kötelező biztosítási űrlap sikeresen frissítve lett.',
+    user_email: this.user.email,
+    image_data: this.uploadedImageUrl || '', // Firebase kép URL
+    ...form // <<< itt minden űrlap mezőt automatikusan átküldünk
+  };
 
-    try {
-      await emailjs.send(
-        'service_3l4skcp',
-        'template_fjfp4uv',
-        templateParams,
-        '1HoL76uozXpANfljR'
-      );
-      console.log('Email sent successfully!');
-    } catch (error) {
-      console.error('Email sending failed:', error);
-      this.showSnackbar('Hiba történt az email küldésekor');
-    }
+  try {
+    await emailjs.send(
+      'service_3l4skcp',
+      'template_fjfp4uv', // itt maradhat a kötelező biztosítás template ID-ja
+      templateParams,
+      '1HoL76uozXpANfljR'
+    );
+    console.log('Email sent successfully!');
+  } catch (error) {
+    console.error('Email sending failed:', error);
+    this.showSnackbar('Hiba történt az email küldésekor');
   }
+}
+
 
   private showSnackbar(message: string): void {
     this.submissionMessage = message;
