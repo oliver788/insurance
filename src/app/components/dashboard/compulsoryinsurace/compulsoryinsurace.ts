@@ -155,6 +155,7 @@ export class Compulsoryinsurace implements OnInit {
     const formData = {
       userEmail: this.user.email,
       userId: this.user.uid,
+       type: "kotelezto",
       timestamp: new Date(),
       ...this.surveyForm.value
     };

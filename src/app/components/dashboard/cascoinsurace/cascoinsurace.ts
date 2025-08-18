@@ -56,6 +56,7 @@ export class Cascoinsurace implements OnInit {
 
   private initializeForm(): void {
     this.surveyForm = new FormGroup({
+    
       szerzodoNev: new FormControl('', Validators.required),
       telefon: new FormControl('', Validators.required),
       szerzodoCim: new FormControl('', Validators.required),
@@ -154,6 +155,7 @@ export class Cascoinsurace implements OnInit {
     const formData = {
       userEmail: this.user.email,
       userId: this.user.uid,
+      type: "casco",
       timestamp: new Date(),
       ...this.surveyForm.value
     };

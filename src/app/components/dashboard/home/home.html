@@ -3,68 +3,70 @@
 <div class="container">
   <header>
     <h1>Biztosítási kérdőíveink:
-</h1>
+    </h1>
     <button mat-raised-button color="warn" (click)="onSignout()">
       Kijelentkezés
     </button>
   </header>
-<hr>
-<div *ngIf="!isAdmin" class="card-grid mt-5">
+  <hr>
+  <div *ngIf="!isAdmin" class="card-grid mt-5">
 
-  <div class="card" [routerLink]="['/dashboard/cascoinsurace']">
-    <div class="card-hover-overlay">
-      <span>Ugrás a kérdőívre</span>
+    <div class="card" [routerLink]="['/dashboard/cascoinsurace']">
+      <div class="card-hover-overlay">
+        <span>Ugrás a kérdőívre</span>
+      </div>
+      <img src="/cards/casco_404x184_808x368.jpg" class="card-img-top" alt="casco biztosítás">
+      <div class="card-body">
+        <h5 class="card-title">Casco biztosítás</h5>
+        <p class="card-text">
+          Legyen az autód is biztonságban! A K&H casco biztosítása választott fedezettől függően védelmet nyújthat a
+          gépjárművet ért törés, lopás és elemi károk esetén is.
+        </p>
+      </div>
     </div>
-    <img src="/cards/casco_404x184_808x368.jpg" class="card-img-top" alt="casco biztosítás">
-    <div class="card-body">
-      <h5 class="card-title">Casco biztosítás</h5>
-      <p class="card-text">
-        Legyen az autód is biztonságban! A K&H casco biztosítása választott fedezettől függően védelmet nyújthat a gépjárművet ért törés, lopás és elemi károk esetén is.
-      </p>
+
+    <div class="card" [routerLink]="['/dashboard/compulsoryinsurace']">
+      <div class="card-hover-overlay">
+        <span>Ugrás a kérdőívre</span>
+      </div>
+      <img src="/cards/GFB_404x184_808x368.jpg" class="card-img-top" alt="kötelező gépjármű-felelősségbiztosítás">
+      <div class="card-body">
+        <h5 class="card-title">Kötelező gépjármű-felelősségbiztosítás</h5>
+        <p class="card-text">
+          Nem mindegy, hogy hol és mennyiért kötöd meg kötelező biztosításod.
+        </p>
+      </div>
     </div>
+
+    <div class="card" [routerLink]="['/dashboard/homeinsurace']">
+      <div class="card-hover-overlay">
+        <span>Ugrás a kérdőívre</span>
+      </div>
+      <img src="/cards/lakasbiztositas-kartya_812x370.jpg" class="card-img-top" alt="lakásbiztosítás">
+      <div class="card-body">
+        <h5 class="card-title">Lakásbiztosítás</h5>
+        <p class="card-text">
+          Teljes körű biztosítási védelem ingó és ingóságaidra, kiegészítő fedezetekkel az igényeidre szabva. Kösd meg
+          azonnal.
+        </p>
+      </div>
+    </div>
+
   </div>
 
-  <div class="card" [routerLink]="['/dashboard/compulsoryinsurace']">
-    <div class="card-hover-overlay">
-      <span>Ugrás a kérdőívre</span>
-    </div>
-    <img src="/cards/GFB_404x184_808x368.jpg" class="card-img-top" alt="kötelező gépjármű-felelősségbiztosítás">
-    <div class="card-body">
-      <h5 class="card-title">Kötelező gépjármű-felelősségbiztosítás</h5>
-      <p class="card-text">
-        Nem mindegy, hogy hol és mennyiért kötöd meg kötelező biztosításod.
-      </p>
-    </div>
+
+  <hr>
+  <div *ngIf="!isAdmin" id="maintext">
+    <h2>További fontos információk</h2>
+
+    <p>A megfelelő kérdőív kitöltését követően munkatársaink értesítést kapnak, és a válaszok rögzítésre kerülnek.
+
+      Bármilyen jellegű probléma esetén az oldal alján található elérhetőségen keresztül tudsz kapcsolatba lépni velünk.
+    </p>
+
+
+
   </div>
-
-  <div class="card" [routerLink]="['/dashboard/homeinsurace']">
-    <div class="card-hover-overlay">
-      <span>Ugrás a kérdőívre</span>
-    </div>
-    <img src="/cards/lakasbiztositas-kartya_812x370.jpg" class="card-img-top" alt="lakásbiztosítás">
-    <div class="card-body">
-      <h5 class="card-title">Lakásbiztosítás</h5>
-      <p class="card-text">
-        Teljes körű biztosítási védelem ingó és ingóságaidra, kiegészítő fedezetekkel az igényeidre szabva. Kösd meg azonnal.
-      </p>
-    </div>
-  </div>
-
-</div>
-
-
-<hr>
-<div *ngIf="!isAdmin" id="maintext">
-<h2>További fontos információk</h2>
-
-<p>A megfelelő kérdőív kitöltését követően munkatársaink értesítést kapnak, és a válaszok rögzítésre kerülnek.
-
-Bármilyen jellegű probléma esetén az oldal alján található elérhetőségen keresztül tudsz kapcsolatba lépni velünk.</p>
-
-
-
-</div>
-
 
 
 
@@ -75,11 +77,11 @@ Bármilyen jellegű probléma esetén az oldal alján található elérhetőség
 
   <div *ngIf="isAdmin" class="admin-message">
     <h2>Üdv, Admin!</h2>
-    <p>Itt fogod látni a felhasználói válaszokat és egyéb admin funkciókat.</p>
+    <p>Itt láthatod az összes felhasználói választ, biztosítás típus szerint.</p>
   </div>
 
   <div *ngIf="isAdmin" class="admin-table-section">
-    <h2>Casco biztosítási kérdőív válaszok</h2>
+    <h2>Biztosítási kérdőívek válaszai</h2>
 
     <div *ngIf="isLoadingAdminResponses">
       <mat-spinner diameter="40"></mat-spinner>
@@ -87,20 +89,65 @@ Bármilyen jellegű probléma esetén az oldal alján található elérhetőség
     </div>
 
     <div *ngIf="!isLoadingAdminResponses && allResponses.length > 0">
+   
       <div *ngFor="let response of allResponses" class="response-card">
+   <hr>
         <h3>{{ response.userEmail }}</h3>
+        <p><strong>Típus:</strong> {{ response.type }}</p>
         <p><strong>Név:</strong> {{ response.szerzodoNev }}</p>
         <p><strong>Telefon:</strong> {{ response.telefon }}</p>
-        <p><strong>Cím:</strong> {{ response.szerzodoCim }}</p>
         <p><strong>Születési dátum:</strong> {{ response.szuletesiDatum }}</p>
         <p><strong>Anyja neve:</strong> {{ response.anyjaNeve }}</p>
-        <p><strong>Adószám:</strong> {{ response.cegAdoszam || 'Nincs megadva' }}</p>
-        <p><strong>Rendszám:</strong> {{ response.rendszam }}</p>
-        <p><strong>Gyártó:</strong> {{ response.gyarto }}</p>
-        <p><strong>Típus:</strong> {{ response.tipus }}</p>
-        <p><strong>Gyártási év:</strong> {{ response.gyartasiEv }}</p>
-        <p><strong>KM állás:</strong> {{ response.kmAllas }}</p>
-        
+
+        <!-- Lakás biztosítás -->
+        <div *ngIf="response.type === 'lakas'">
+          <p><strong>Ingatlan cím:</strong> {{ response.ingatlanCim }}</p>
+          <p><strong>Épület típus:</strong> {{ response.epuletTipus }}</p>
+          <p><strong>Épület szerkezet:</strong> {{ response.epuletSzerkezet }}</p>
+          <p><strong>Lakóépület érték:</strong> {{ response.lakoepuletErtek }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.biztositasTipus }}</p>
+
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.lakottsag }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.tetoSzerkezet }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.bejelentettSzemelyek }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.mellekepuletErtek }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.epitmenyErtek }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.ingosagErtek }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.kiemeltErtek1 }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.kiemeltErtek2 }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.mellekIngosagErtek }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.altalanosIngosagErtek }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.uvegErtek }}</p>
+          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.jelenlegiBiztosito }}</p>
+        </div>
+
+        <!-- Kötelező biztosítás -->
+        <div *ngIf="response.type === 'kotelezto'">
+          <p><strong>Rendszám:</strong> {{ response.rendszam }}</p>
+          <p><strong>Alvázszám:</strong> {{ response.alvazszam }}</p>
+          <p><strong>Forgalmi szám:</strong> {{ response.forgalmiSzam }}</p>
+          <p><strong>Gyártó:</strong> {{ response.gyarto }}</p>
+          <p><strong>Típus:</strong> {{ response.tipus }}</p>
+          <p><strong>Gyártási év:</strong> {{ response.gyartasiEv }}</p>
+          <p><strong>Bonus-Malus:</strong> {{ response.BonusMalus }}</p>
+          <p><strong>Kártörténeti adatok:</strong> {{ response.kartortenetiAdatok }}</p>
+          <p><strong>szerzodes oka:</strong> {{ response.szerzodesOka }}</p>
+        </div>
+
+        <!-- Casco biztosítás -->
+        <div *ngIf="response.type === 'casco'">
+          <p><strong>Rendszám:</strong> {{ response.rendszam }}</p>
+          <p><strong>Alvázszám:</strong> {{ response.alvazszam }}</p>
+          <p><strong>Forgalmi szám:</strong> {{ response.forgalmiSzam }}</p>
+          <p><strong>Gyártó:</strong> {{ response.gyarto }}</p>
+          <p><strong>Típus:</strong> {{ response.tipus }}</p>
+          <p><strong>Gyártási év:</strong> {{ response.gyartasiEv }}</p>
+          <p><strong>KM állás:</strong> {{ response.kmAllas }}</p>
+          <p><strong>Kármentes évek:</strong> {{ response.karmentesEvek }}</p>
+          <p><strong>szerzodes oka:</strong> {{ response.szerzodesOka }}</p>
+        </div>
+
+        <!-- Feltöltött kép -->
         <div *ngIf="userImages[response.userId]" class="image-container">
           <h4>Feltöltött kép:</h4>
           <img [src]="userImages[response.userId]" alt="Feltöltött kép" class="uploaded-image">
@@ -108,13 +155,16 @@ Bármilyen jellegű probléma esetén az oldal alján található elérhetőség
         <div *ngIf="!userImages[response.userId]">
           <p>Nincs feltöltött kép</p>
         </div>
-        
       </div>
     </div>
 
-    <p *ngIf="!isLoadingAdminResponses && allResponses.length === 0">Nincs elérhető válasz.</p>
+    <p *ngIf="!isLoadingAdminResponses && allResponses.length === 0">
+      Nincs elérhető válasz.
+    </p>
   </div>
 
-  
+
+
+
 </div>
-<app-footer  class="bg-body-tertiary text-center text-lg-start mt-auto"></app-footer>
+<app-footer class="bg-body-tertiary text-center text-lg-start mt-auto"></app-footer>

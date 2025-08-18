@@ -152,6 +152,7 @@ export class Homeinsurace  implements OnInit {
     const formData = {
       userEmail: this.user.email,
       userId: this.user.uid,
+       type: "lakas",
       timestamp: new Date(),
       ...this.surveyForm.value
     };

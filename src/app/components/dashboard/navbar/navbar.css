@@ -86,3 +86,16 @@
     display: block;
   }
 }
+
+
+#logout{
+  background-color: #6e8a9600;
+  color: rgb(226, 64, 64);
+  border: solid 1px ;
+  border-radius: 2px;
+}
+#logout:hover{
+  background-color: rgb(226, 64, 64);
+  color: white;
+  padding: 4px;
+}

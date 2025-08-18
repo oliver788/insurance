@@ -3,8 +3,19 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(0, 56, 101, 0.95); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.3);">
   <div class="container-fluid">
-    <a class="navbar-brand" [routerLink]="['/dashboard']">Főoldal</a>
-    
+
+    <!-- Bal oldal: Főoldal + Kijelentkezés -->
+    <div class="d-flex align-items-center">
+      <a class="navbar-brand" [routerLink]="['/dashboard']">Főoldal</a>
+      <button
+      id="logout"
+        type="button"
+        *ngIf="user$ | async as user"
+        (click)="logout()">
+        ⍈Kijelentkezés
+      </button>
+    </div>
+
     <!-- Toggle gomb - csak a biztosítási menühöz -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#insuranceNav" aria-controls="insuranceNav" aria-expanded="false" aria-label="Toggle insurance menu">
       <span class="navbar-toggler-icon"></span>
@@ -14,9 +25,9 @@
     <div class="collapse navbar-collapse" id="insuranceNav">
       <div class="navbar-nav ms-auto">
         <span class="nav-link title">Biztosítások:</span>
-<a class="nav-link" [routerLink]="['/dashboard/cascoinsurace']">Casco</a>
-<a class="nav-link" [routerLink]="['/dashboard/homeinsurace']">Lakás</a>
-<a class="nav-link" [routerLink]="['/dashboard/compulsoryinsurace']">Kötelező</a>
+        <a class="nav-link" [routerLink]="['/dashboard/cascoinsurace']">Casco</a>
+        <a class="nav-link" [routerLink]="['/dashboard/homeinsurace']">Lakás</a>
+        <a class="nav-link" [routerLink]="['/dashboard/compulsoryinsurace']">Kötelező</a>
       </div>
     </div>
   </div>
