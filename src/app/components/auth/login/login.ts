@@ -37,22 +37,43 @@ export class Login {
     });
   }
 
-  onSubmit() {
-    if (this.authForm.invalid) {
-      this.authForm.markAllAsTouched();
-      return;
-    }
-    this.isSubmitionInProgress = true;
-    this.errorMessage = '';
-
-    signInWithEmailAndPassword(this.auth, this.authForm.value.email, this.authForm.value.password)
-      .then(() => this.redirectToDashboard())
-      .catch(error => {
-        this.isSubmitionInProgress = false;
-        console.error('error:', error);
-        // Hibakezelés itt marad
-      });
+onSubmit() {
+  if (this.authForm.invalid) {
+    this.authForm.markAllAsTouched();
+    return;
   }
+  this.isSubmitionInProgress = true;
+  this.errorMessage = '';
+
+  signInWithEmailAndPassword(
+      this.auth,
+      this.authForm.value.email,
+      this.authForm.value.password
+    )
+    .then(() => {
+      this.isSubmitionInProgress = false;
+      this.redirectToDashboard();
+    })
+    .catch(error => {
+      this.isSubmitionInProgress = false; // spinner leáll
+      console.error('error:', error);
+
+      // 🔹 Itt adjunk vissza hibaüzenetet
+      if (error.code === 'auth/invalid-credential' ||
+          error.code === 'auth/wrong-password' ||
+          error.code === 'auth/user-not-found') {
+        this.errorMessage = 'Hibás email vagy jelszó!';
+      } else if (error.code === 'auth/too-many-requests') {
+        this.errorMessage = 'Túl sok sikertelen próbálkozás. Próbáld újra később.';
+      } else {
+        this.errorMessage = 'Ismeretlen hiba történt. Kérlek próbáld újra.';
+      }
+
+      // ha esetleg nem frissülne azonnal a view:
+      this.cd.detectChanges();
+    });
+}
+
 
   onSignInWithGoogle() {
     signInWithPopup(this.auth, this.googleAuthProvider)

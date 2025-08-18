@@ -156,9 +156,9 @@
     <!-- Kép előnézet -->
     <div *ngIf="selectedImageUrl" class="image-preview">
       <p>Feltöltött kép előnézete:</p>
-      <img [src]="selectedImageUrl" alt="Forgalmi engedély kép" />
+      <img [src]="selectedImageUrl" alt="Forgalmi engedély kép" class="preview-img"/>
       <p *ngIf="uploadedImageUrl" class="image-url">
-        <a [href]="uploadedImageUrl" target="_blank">Kép megnyitása új lapon</a>
+        <a [href]="uploadedImageUrl" target="_blank" >Kép megnyitása új lapon</a>
       </p>
     </div>
  

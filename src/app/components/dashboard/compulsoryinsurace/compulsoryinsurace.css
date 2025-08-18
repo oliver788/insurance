@@ -95,3 +95,16 @@
     }
   }
 }
+.image-preview {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.preview-img {
+  max-width: 500px !important;  /* szélesség max. 300px */
+  width: auto;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  object-fit: contain; /* arányok megtartása */
+}
