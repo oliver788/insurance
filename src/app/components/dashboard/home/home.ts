@@ -9,6 +9,10 @@ import { ChangeDetectorRef } from '@angular/core';
 import emailjs from 'emailjs-com';
 import { getStorage, ref, getDownloadURL } from '@angular/fire/storage';
 import { Footer } from '../../footer/footer';
+import { query, orderBy } from '@angular/fire/firestore';
+import { deleteDoc } from '@angular/fire/firestore';
+import { deleteObject } from '@angular/fire/storage';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.html',
@@ -88,35 +92,35 @@ export class Home implements OnInit {
     }
   }
 
-  private async loadAllResponses(): Promise<void> {
-    this.isLoadingAdminResponses = true;
-    try {
-      const answersRef = collection(this.firestore, 'answers');
-      const querySnapshot = await getDocs(answersRef);
-      this.allResponses = querySnapshot.docs.map(doc => doc.data());
-      
-      // Load images for each user
-      for (const response of this.allResponses) {
-        if (response.userId) {
-          try {
-            const storage = getStorage();
-            const imageRef = ref(storage, `casco_uploads/${response.userId}.jpg`);
-            const url = await getDownloadURL(imageRef);
-            this.userImages[response.userId] = url;
-          } catch (error) {
-            console.log(`No image found for user ${response.userId}`);
-            this.userImages[response.userId] = '';
-          }
+ private async loadAllResponses(): Promise<void> {
+  this.isLoadingAdminResponses = true;
+  try {
+    const answersRef = collection(this.firestore, 'answers');
+    const q = query(answersRef, orderBy('timestamp', 'desc'));
+    const querySnapshot = await getDocs(q);
+    this.allResponses = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    // képek betöltése
+    for (const response of this.allResponses) {
+      if (response.userId) {
+        try {
+          const storage = getStorage();
+          const imageRef = ref(storage, `casco_uploads/${response.userId}.jpg`);
+          const url = await getDownloadURL(imageRef);
+          this.userImages[response.userId] = url;
+        } catch {
+          this.userImages[response.userId] = '';
         }
       }
-    } catch (error) {
-      console.error('Error loading all responses:', error);
-      this.showSnackbar('Hiba történt az admin adatok betöltésekor');
-    } finally {
-      this.isLoadingAdminResponses = false;
-      this.cd.detectChanges();
     }
+  } catch (error) {
+    console.error('Error loading all responses:', error);
+    this.showSnackbar('Hiba történt az admin adatok betöltésekor');
+  } finally {
+    this.isLoadingAdminResponses = false;
+    this.cd.detectChanges();
   }
+}
 
   private handleLoadComplete(success: boolean, error: boolean = false): void {
     this.isLoading = false;
@@ -210,4 +214,42 @@ export class Home implements OnInit {
       console.error('Email sending failed:', error);
     }
   }
+
+//törlés a kép + válaszok
+// Törlés: admin törölhet más válaszát is
+async deleteResponse(response: any): Promise<void> {
+  if (!response?.userId) return;
+
+  this.isSubmitting = true;
+
+  try {
+    // Firestore dokumentum törlése
+    const userDocRef = doc(this.firestore, 'answers', response.userId);
+    await deleteDoc(userDocRef);
+
+    // Storage kép törlése (ha van)
+    try {
+      const storage = getStorage();
+      const imageRef = ref(storage, `casco_uploads/${response.userId}.jpg`);
+      await deleteObject(imageRef);
+      console.log('Kép törölve');
+    } catch (err) {
+      console.warn('Nem volt kép feltöltve, vagy törlés sikertelen:', err);
+    }
+
+    // lokális lista frissítése
+    this.allResponses = this.allResponses.filter(r => r.userId !== response.userId);
+    delete this.userImages[response.userId];
+
+    this.showSnackbar('A válaszok és a kép törölve lettek!');
+  } catch (error) {
+    console.error('Törlés hiba:', error);
+    this.showSnackbar('Hiba történt a törlés közben');
+  } finally {
+    this.isSubmitting = false;
+    this.cd.detectChanges();
+  }
+}
+
+
 }

@@ -78,88 +78,99 @@
     <p>Itt láthatod az összes felhasználói választ, biztosítás típus szerint.</p>
   </div>
 
-  <div *ngIf="isAdmin" class="admin-table-section">
-    <h2>Biztosítási kérdőívek válaszai</h2>
+<div *ngIf="isAdmin" class="admin-table-section">
+  <h2>Biztosítási kérdőívek válaszai</h2>
 
-    <div *ngIf="isLoadingAdminResponses">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>Felhasználói válaszok betöltése...</p>
-    </div>
-
-    <div *ngIf="!isLoadingAdminResponses && allResponses.length > 0">
-   
-      <div *ngFor="let response of allResponses" class="response-card">
-   <hr>
-        <h3>{{ response.userEmail }}</h3>
-        <p><strong>Típus:</strong> {{ response.type }}</p>
-        <p><strong>Név:</strong> {{ response.szerzodoNev }}</p>
-        <p><strong>Telefon:</strong> {{ response.telefon }}</p>
-        <p><strong>Születési dátum:</strong> {{ response.szuletesiDatum }}</p>
-        <p><strong>Anyja neve:</strong> {{ response.anyjaNeve }}</p>
-
-        <!-- Lakás biztosítás -->
-        <div *ngIf="response.type === 'lakas'">
-          <p><strong>Ingatlan cím:</strong> {{ response.ingatlanCim }}</p>
-          <p><strong>Épület típus:</strong> {{ response.epuletTipus }}</p>
-          <p><strong>Épület szerkezet:</strong> {{ response.epuletSzerkezet }}</p>
-          <p><strong>Lakóépület érték:</strong> {{ response.lakoepuletErtek }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.biztositasTipus }}</p>
-
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.lakottsag }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.tetoSzerkezet }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.bejelentettSzemelyek }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.mellekepuletErtek }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.epitmenyErtek }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.ingosagErtek }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.kiemeltErtek1 }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.kiemeltErtek2 }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.mellekIngosagErtek }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.altalanosIngosagErtek }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.uvegErtek }}</p>
-          <p><strong>Ingatlan biztosítás típusa:</strong> {{ response.jelenlegiBiztosito }}</p>
-        </div>
-
-        <!-- Kötelező biztosítás -->
-        <div *ngIf="response.type === 'kotelezto'">
-          <p><strong>Rendszám:</strong> {{ response.rendszam }}</p>
-          <p><strong>Alvázszám:</strong> {{ response.alvazszam }}</p>
-          <p><strong>Forgalmi szám:</strong> {{ response.forgalmiSzam }}</p>
-          <p><strong>Gyártó:</strong> {{ response.gyarto }}</p>
-          <p><strong>Típus:</strong> {{ response.tipus }}</p>
-          <p><strong>Gyártási év:</strong> {{ response.gyartasiEv }}</p>
-          <p><strong>Bonus-Malus:</strong> {{ response.BonusMalus }}</p>
-          <p><strong>Kártörténeti adatok:</strong> {{ response.kartortenetiAdatok }}</p>
-          <p><strong>szerzodes oka:</strong> {{ response.szerzodesOka }}</p>
-        </div>
-
-        <!-- Casco biztosítás -->
-        <div *ngIf="response.type === 'casco'">
-          <p><strong>Rendszám:</strong> {{ response.rendszam }}</p>
-          <p><strong>Alvázszám:</strong> {{ response.alvazszam }}</p>
-          <p><strong>Forgalmi szám:</strong> {{ response.forgalmiSzam }}</p>
-          <p><strong>Gyártó:</strong> {{ response.gyarto }}</p>
-          <p><strong>Típus:</strong> {{ response.tipus }}</p>
-          <p><strong>Gyártási év:</strong> {{ response.gyartasiEv }}</p>
-          <p><strong>KM állás:</strong> {{ response.kmAllas }}</p>
-          <p><strong>Kármentes évek:</strong> {{ response.karmentesEvek }}</p>
-          <p><strong>szerzodes oka:</strong> {{ response.szerzodesOka }}</p>
-        </div>
-
-        <!-- Feltöltött kép -->
-        <div *ngIf="userImages[response.userId]" class="image-container">
-          <h4>Feltöltött kép:</h4>
-          <img [src]="userImages[response.userId]" alt="Feltöltött kép" class="uploaded-image">
-        </div>
-        <div *ngIf="!userImages[response.userId]">
-          <p>Nincs feltöltött kép</p>
-        </div>
-      </div>
-    </div>
-
-    <p *ngIf="!isLoadingAdminResponses && allResponses.length === 0">
-      Nincs elérhető válasz.
-    </p>
+  <div *ngIf="isLoadingAdminResponses">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Felhasználói válaszok betöltése...</p>
   </div>
+
+  <div *ngIf="!isLoadingAdminResponses && allResponses.length > 0">
+    <div *ngFor="let response of allResponses" class="response-card">
+      <hr>
+      <h3>{{ response.userEmail }}</h3>
+
+      <p *ngIf="response.type"><strong>Típus:</strong> {{ response.type }}</p>
+      <p *ngIf="response.szerzodoNev"><strong>Név:</strong> {{ response.szerzodoNev }}</p>
+      <p *ngIf="response.telefon"><strong>Telefon:</strong> {{ response.telefon }}</p>
+      <p *ngIf="response.szuletesiDatum"><strong>Születési dátum:</strong> {{ response.szuletesiDatum }}</p>
+      <p *ngIf="response.anyjaNeve"><strong>Anyja neve:</strong> {{ response.anyjaNeve }}</p>
+
+      <!-- Lakás biztosítás -->
+      <div *ngIf="response.ingatlanCim">
+        <h4>🏠 Lakás biztosítás</h4>
+        <p *ngIf="response.ingatlanCim"><strong>Ingatlan cím:</strong> {{ response.ingatlanCim }}</p>
+        <p *ngIf="response.epuletTipus"><strong>Épület típus:</strong> {{ response.epuletTipus }}</p>
+        <p *ngIf="response.epuletSzerkezet"><strong>Épület szerkezet:</strong> {{ response.epuletSzerkezet }}</p>
+        <p *ngIf="response.lakoepuletErtek"><strong>Lakóépület érték:</strong> {{ response.lakoepuletErtek }}</p>
+        <p *ngIf="response.biztositasTipus"><strong>Ingatlan biztosítás típusa:</strong> {{ response.biztositasTipus }}</p>
+        <p *ngIf="response.lakottsag"><strong>Lakottság:</strong> {{ response.lakottsag }}</p>
+        <p *ngIf="response.tetoSzerkezet"><strong>Tető szerkezete:</strong> {{ response.tetoSzerkezet }}</p>
+        <p *ngIf="response.bejelentettSzemelyek"><strong>Bejelentett személyek száma:</strong> {{ response.bejelentettSzemelyek }}</p>
+        <p *ngIf="response.mellekepuletErtek"><strong>Melléképület m² és biztosítandó értéke:</strong> {{ response.mellekepuletErtek }}</p>
+        <p *ngIf="response.epitmenyErtek"><strong>Építmény (kerítés, tároló stb.) értéke:</strong> {{ response.epitmenyErtek }}</p>
+        <p *ngIf="response.ingosagErtek"><strong>Ingóságok értéke:</strong> {{ response.ingosagErtek }}</p>
+        <p *ngIf="response.kiemeltErtek1"><strong>Kiemelt ingóságok (ékszer, készpénz):</strong> {{ response.kiemeltErtek1 }}</p>
+        <p *ngIf="response.kiemeltErtek2"><strong>Kiemelt ingóságok (festmény, antik bútor):</strong> {{ response.kiemeltErtek2 }}</p>
+        <p *ngIf="response.mellekIngosagErtek"><strong>Melléképületben tárolt ingóságok értéke:</strong> {{ response.mellekIngosagErtek }}</p>
+        <p *ngIf="response.altalanosIngosagErtek"><strong>Általános ingóság értéke:</strong> {{ response.altalanosIngosagErtek }}</p>
+        <p *ngIf="response.uvegErtek"><strong>Különleges üvegek értéke:</strong> {{ response.uvegErtek }}</p>
+        <p *ngIf="response.jelenlegiBiztosito"><strong>Jelenlegi biztosító és kötvényszám:</strong> {{ response.jelenlegiBiztosito }}</p>
+      </div>
+
+      <!-- Kötelező biztosítás -->
+      <div *ngIf="response.BonusMalus">
+        <h4>🚗 Kötelező biztosítás</h4>
+        <p *ngIf="response.rendszam"><strong>Rendszám:</strong> {{ response.rendszam }}</p>
+        <p *ngIf="response.alvazszam"><strong>Alvázszám:</strong> {{ response.alvazszam }}</p>
+        <p *ngIf="response.forgalmiSzam"><strong>Forgalmi szám:</strong> {{ response.forgalmiSzam }}</p>
+        <p *ngIf="response.gyarto"><strong>Gyártó:</strong> {{ response.gyarto }}</p>
+        <p *ngIf="response.tipus"><strong>Típus:</strong> {{ response.tipus }}</p>
+        <p *ngIf="response.gyartasiEv"><strong>Gyártási év:</strong> {{ response.gyartasiEv }}</p>
+        <p *ngIf="response.BonusMalus"><strong>Bonus-Malus:</strong> {{ response.BonusMalus }}</p>
+        <p *ngIf="response.kartortenetiAdatok"><strong>Kártörténeti adatok:</strong> {{ response.kartortenetiAdatok }}</p>
+        <p *ngIf="response.szerzodesOka"><strong>Szerződés oka:</strong> {{ response.szerzodesOka }}</p>
+      </div>
+
+      <!-- Casco biztosítás -->
+      <div *ngIf="response.karmentesEvek">
+        <h4>🛡️ Casco biztosítás</h4>
+        <p *ngIf="response.rendszam"><strong>Rendszám:</strong> {{ response.rendszam }}</p>
+        <p *ngIf="response.alvazszam"><strong>Alvázszám:</strong> {{ response.alvazszam }}</p>
+        <p *ngIf="response.forgalmiSzam"><strong>Forgalmi szám:</strong> {{ response.forgalmiSzam }}</p>
+        <p *ngIf="response.gyarto"><strong>Gyártó:</strong> {{ response.gyarto }}</p>
+        <p *ngIf="response.tipus"><strong>Típus:</strong> {{ response.tipus }}</p>
+        <p *ngIf="response.gyartasiEv"><strong>Gyártási év:</strong> {{ response.gyartasiEv }}</p>
+        <p *ngIf="response.kmAllas"><strong>KM állás:</strong> {{ response.kmAllas }}</p>
+        <p *ngIf="response.karmentesEvek"><strong>Kármentes évek:</strong> {{ response.karmentesEvek }}</p>
+        <p *ngIf="response.szerzodesOka"><strong>Szerződés oka:</strong> {{ response.szerzodesOka }}</p>
+      </div>
+
+      <!-- Feltöltött kép -->
+      <div *ngIf="userImages[response.userId]" class="image-container">
+        <h4>📷 Feltöltött kép:</h4>
+        <img [src]="userImages[response.userId]" alt="Feltöltött kép" class="uploaded-image">
+      </div>
+      <div *ngIf="!userImages[response.userId]">
+        <p>Nincs feltöltött kép</p>
+      </div>
+
+       <button 
+  class="btn btn-danger mt-2" 
+  (click)="deleteResponse(response)" 
+  [disabled]="isSubmitting">
+  Válaszok és kép törlése
+</button>
+
+    </div>
+  </div>
+  
+
+
+
+</div>
+
 
 
 

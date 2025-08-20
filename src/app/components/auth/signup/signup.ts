@@ -2,7 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Auth, AuthErrorCodes, GoogleAuthProvider, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { createUserWithEmailAndPassword, signInWithPopup } from '@firebase/auth';
+import { createUserWithEmailAndPassword } from '@firebase/auth';
+import { signInWithPopup } from '@angular/fire/auth';
 import { ChangeDetectorRef } from '@angular/core';
 import { ValidatorFn, AbstractControl } from '@angular/forms';
 @Component({
